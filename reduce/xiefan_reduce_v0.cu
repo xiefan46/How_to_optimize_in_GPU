@@ -12,7 +12,7 @@ const int THREAD_PER_BLOCK = 256;
 bool validate(float* res, float* output, int n) {
   for (int i = 0; i < n; i++) {
     if (res[i] != output[i])
-      printf("not equal. res: %f, output: %f", res[i], output[i])
+      printf("not equal. res: %f, output: %f", res[i], output[i]);
       return false;
   }
   return true;
