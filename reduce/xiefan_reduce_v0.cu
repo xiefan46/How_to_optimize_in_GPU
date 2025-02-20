@@ -27,7 +27,7 @@ __global__ void reduce_kernel_0(float* d_input, float* d_output, const int N){
   __syncthreads();
   for (int i = 1; i < THREAD_PER_BLOCK; i *= 2) {
     if (tid % (2 * i) == 0) {
-      smem[tid] = smem[tid + t]
+      smem[tid] = smem[tid + t];
     }
     __syncthreads();
   }
@@ -71,8 +71,8 @@ int main() {
   float* output = (float*) malloc(block_cnt * sizeof(float));
   cudaMemcpy(output, d_output, block_cnt * sizeof(float), cudaMemcpyDeviceToHost);
   if (validate(res, output, block_cnt)) {
-    printf("validation success!\n")
+    printf("validation success!\n");
   } else {
-    printf("validation failed!\n")
+    printf("validation failed!\n");
   }
 }
