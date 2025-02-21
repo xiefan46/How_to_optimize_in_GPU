@@ -10,9 +10,9 @@ const int THREAD_NUM_PER_BLOCK = 256;
 
 __global__ void reduce_kernel_1(float* input, float* output, const int N) {
   const int tid = threadIdx.x;
-  const int bid = blockIdx.x
+  const int bid = blockIdx.x;
   const int global_idx = blockDim.x * bid + tid;
-  __shared__ smem[THREAD_NUM_PER_BLOCK];
+  __shared__ float smem[THREAD_NUM_PER_BLOCK];
   if (global_idx < N) {
     smem[tid] = input[global_idx];
   }
@@ -58,7 +58,7 @@ int main() {
 
   // Move host data to cpu
   float* d_input;
-  if (cudaMalloc((void**)&d_input, N * sizeof(float)); != cudaSuccess) {
+  if (cudaMalloc((void**)&d_input, N * sizeof(float)) != cudaSuccess) {
     printf("error allocaion memory!");
     exit(1);
   }
