@@ -28,7 +28,7 @@ __global__ void reduce_kernel_0(float* d_input, float* d_output, const int N){
   __shared__ float smem[THREAD_PER_BLOCK];
   smem[tid] = d_input[global_id];
   __syncthreads();
-  for (int i = 1; i < blockDim.x; i *= 2) {
+  for (int i = 1; i < THREAD_PER_BLOCK; i *= 2) {
     if (tid % (2 * i) == 0) {
       smem[tid] += smem[tid + i];
     }
