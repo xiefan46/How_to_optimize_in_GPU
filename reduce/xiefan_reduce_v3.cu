@@ -6,7 +6,7 @@
 #include <sys/time.h>
 
 
-const int THREAD_NUM_PER_BLOCK = 512;
+const int THREAD_NUM_PER_BLOCK = 256;
 
 __global__ void reduce_kernel_1(float* input, float* output, const int N) {
   const int tid = threadIdx.x;
@@ -49,11 +49,12 @@ int main() {
   for (int i = 0; i < N; i++) {
     input[i] = 1;
   }
-  const int block_cnt = (N + THREAD_NUM_PER_BLOCK - 1) / THREAD_NUM_PER_BLOCK;
+  const int num_per_block = 2 * THREAD_NUM_PER_BLOCK;
+  const int block_cnt = (N + num_per_block - 1) / num_per_block;
   float* correct_res = (float*) malloc(block_cnt * sizeof(float));
   for (int i = 0; i < block_cnt; i++) {
     for (int j = 0; j < THREAD_NUM_PER_BLOCK; j++) {
-      correct_res[i] += input[j];
+      correct_res[i] += input[i * THREAD_NUM_PER_BLOCK + j];
     }
   }
 
