@@ -83,8 +83,8 @@ int main() {
   cudaMemcpy(output, d_output, block_cnt * sizeof(float), cudaMemcpyDeviceToHost);
 
   if (validate(output, correct_res, block_cnt)) {
-    printf("check success!");
+    printf("check success! \n");
   } else {
-    printf("check failed!");
+    printf("check failed! \n");
   }
 }
