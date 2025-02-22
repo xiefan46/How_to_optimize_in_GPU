@@ -31,7 +31,6 @@ __global__ void reduce_kernel_1(float* input, float* output, const int N) {
     // method3: 每个线程处理相邻元素
   const int tid = threadIdx.x;
   const int bid = blockIdx.x;
-  const int bd = blockDim.x;
   const int global_idx = (blockDim.x * bid  + tid) * NUM_PER_THREAD;
   smem[tid] = 0;
   smem[tid] = 0;
