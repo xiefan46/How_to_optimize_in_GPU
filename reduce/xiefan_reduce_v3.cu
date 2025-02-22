@@ -14,7 +14,7 @@ __global__ void reduce_kernel_1(float* input, float* output, const int N) {
   const int tid = threadIdx.x;
   const int bid = blockIdx.x;
   const int bd = blockDim.x;
-  const int global_idx = blockDim.x * bid * THREAD_NUM_PER_BLOCK  + tid;
+  const int global_idx = blockDim.x * bid * NUM_PER_THREAD  + tid;
   __shared__ float smem[THREAD_NUM_PER_BLOCK];
   for (int i = 0; i < NUM_PER_THREAD; i++) {
     const int idx = global_idx + i * bd;
