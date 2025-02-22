@@ -16,11 +16,14 @@ __global__ void reduce_kernel_1(float* input, float* output, const int N) {
   const int bd = blockDim.x;
   const int global_idx = blockDim.x * bid + tid;
   __shared__ float smem[THREAD_NUM_PER_BLOCK];
-  if (global_idx < N) {
-    for (int i = 0; i < NUM_PER_THREAD; i++) {
-      smem[tid] += input[global_idx + i * bd];
+  for (int i = 0; i < NUM_PER_THREAD; i++) {
+    const int idx = global_idx + i * bd;
+    if (idx < N) {
+      smem[tid] += input[idx];
     }
+
   }
+
   __syncthreads();
   #pragma unroll
   for (int i = THREAD_NUM_PER_BLOCK / (2 * NUM_PER_THREAD); i > 0; i /= 2) {
@@ -57,8 +60,8 @@ int main() {
   const int block_cnt = (N + num_per_block - 1) / num_per_block;
   float* correct_res = (float*) malloc(block_cnt * sizeof(float));
   for (int i = 0; i < block_cnt; i++) {
-    for (int j = 0; j < THREAD_NUM_PER_BLOCK; j++) {
-      correct_res[i] += input[i * THREAD_NUM_PER_BLOCK + j];
+    for (int j = 0; j < NUM_PER_THREAD; j++) {
+      correct_res[i] += input[i * num_per_block + j];
     }
   }
 
