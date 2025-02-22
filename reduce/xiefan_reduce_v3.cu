@@ -12,32 +12,32 @@ const int NUM_PER_THREAD = 4;
 
 __global__ void reduce_kernel_1(float* input, float* output, const int N) {
   __shared__ float smem[THREAD_NUM_PER_BLOCK];
-//  const int tid = threadIdx.x;
-//  const int bid = blockIdx.x;
-//  const int bd = blockDim.x;
-//  const int global_idx = blockDim.x * bid * NUM_PER_THREAD  + tid;
+  const int tid = threadIdx.x;
+  const int bid = blockIdx.x;
+  const int bd = blockDim.x;
+  const int global_idx = blockDim.x * bid * NUM_PER_THREAD  + tid;
 
   // method1: manual unroll
   // smem[tid] = input[global_idx] + input[global_idx + bd] + input[global_idx + 2 * bd] + input[global_idx + 3 * bd];
 
   // method2: auto unroll
-//  smem[tid] = 0;
-//  #pragma unroll
-//  for (int i = 0; i < NUM_PER_THREAD; i++) {
-//    const int idx = global_idx + i * bd;
-//    smem[tid] += input[idx];
-//  }
-
-    // method3: 每个线程处理相邻元素
-  const int tid = threadIdx.x;
-  const int bid = blockIdx.x;
-  const int global_idx = (blockDim.x * bid  + tid) * NUM_PER_THREAD;
   smem[tid] = 0;
   #pragma unroll
   for (int i = 0; i < NUM_PER_THREAD; i++) {
-    const int idx = global_idx + i;
+    const int idx = global_idx + i * bd;
     smem[tid] += input[idx];
   }
+
+    // method3: 每个线程处理相邻元素 (效果变差)
+//  const int tid = threadIdx.x;
+//  const int bid = blockIdx.x;
+//  const int global_idx = (blockDim.x * bid  + tid) * NUM_PER_THREAD;
+//  smem[tid] = 0;
+//  #pragma unroll
+//  for (int i = 0; i < NUM_PER_THREAD; i++) {
+//    const int idx = global_idx + i;
+//    smem[tid] += input[idx];
+//  }
 
   __syncthreads();
 
