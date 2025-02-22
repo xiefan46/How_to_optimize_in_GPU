@@ -16,16 +16,16 @@ __global__ void reduce_kernel_1(float* input, float* output, const int N) {
   const int bd = blockDim.x;
   const int global_idx = blockDim.x * bid * NUM_PER_THREAD  + tid;
   __shared__ float smem[THREAD_NUM_PER_BLOCK];
-  smem[tid] = input[global_idx] + input[global_idx + bd] + input[global_idx + 2 * bd] + input[global_idx + 3 * bd];
-//  smem[tid] = 0;
-//  #pragma unroll
-//  for (int i = 0; i < NUM_PER_THREAD; i++) {
-//    const int idx = global_idx + i * bd;
-//    if (idx < N) {
-//      smem[tid] += input[idx];
-//    }
-//
-//  }
+  // smem[tid] = input[global_idx] + input[global_idx + bd] + input[global_idx + 2 * bd] + input[global_idx + 3 * bd];
+  smem[tid] = 0;
+  #pragma unroll
+  for (int i = 0; i < NUM_PER_THREAD; i++) {
+    const int idx = global_idx + i * bd;
+    if (idx < N) {
+      smem[tid] += input[idx];
+    }
+
+  }
 
   __syncthreads();
 
