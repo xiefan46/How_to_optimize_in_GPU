@@ -23,24 +23,12 @@ __global__ void reduce_kernel_1(float* input, float* output, const int N) {
   smem[tid] = 0;
   while(global_idx < N) {
     smem[tid] += input[global_idx];
-    global_idx += bd;
+    global_idx += NUM_PER_THREAD * bd;
   }
-
-
-    // method3: 每个线程处理相邻元素 (效果变差)
-//  const int tid = threadIdx.x;
-//  const int bid = blockIdx.x;
-//  const int global_idx = (blockDim.x * bid  + tid) * NUM_PER_THREAD;
-//  smem[tid] = 0;
-//  #pragma unroll
-//  for (int i = 0; i < NUM_PER_THREAD; i++) {
-//    const int idx = global_idx + i;
-//    smem[tid] += input[idx];
-//  }
 
   __syncthreads();
 
-  for (int i = THREAD_NUM_PER_BLOCK / 2; i > 32; i /= 2) {
+  for (int i = THREAD_NUM_PER_BLOCK / 2; i > 0; i /= 2) {
     if (tid < i) {
       smem[tid] += smem[tid + i];
     }
