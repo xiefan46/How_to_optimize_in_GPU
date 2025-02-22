@@ -60,6 +60,7 @@ int main() {
   const int block_cnt = (N + num_per_block - 1) / num_per_block;
   float* correct_res = (float*) malloc(block_cnt * sizeof(float));
   for (int i = 0; i < block_cnt; i++) {
+    correct_res[i] = 0;
     for (int j = 0; j < num_per_block; j++) {
       correct_res[i] += input[i * num_per_block + j];
     }
