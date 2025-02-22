@@ -8,7 +8,7 @@
 
 const int THREAD_NUM_PER_BLOCK = 256;
 
-const int NUM_PER_THREAD = 8;
+const int NUM_PER_THREAD = 16;
 
 __global__ void reduce_kernel_1(float* input, float* output, const int N) {
   const int tid = threadIdx.x;
