@@ -33,7 +33,6 @@ __global__ void reduce_kernel_1(float* input, float* output, const int N) {
   const int bid = blockIdx.x;
   const int global_idx = (blockDim.x * bid  + tid) * NUM_PER_THREAD;
   smem[tid] = 0;
-  smem[tid] = 0;
   #pragma unroll
   for (int i = 0; i < NUM_PER_THREAD; i++) {
     const int idx = global_idx + i;
