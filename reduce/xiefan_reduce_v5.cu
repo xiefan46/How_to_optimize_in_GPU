@@ -23,7 +23,7 @@ __global__ void reduce_kernel_1(float* input, float* output, const int N) {
   smem[tid] = 0;
   while(global_idx < N) {
     smem[tid] += input[global_idx];
-    global_idx += NUM_PER_THREAD * bd;
+    global_idx += gridDim.x * bd;
   }
 
   __syncthreads();
