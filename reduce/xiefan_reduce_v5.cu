@@ -13,8 +13,9 @@ const int NUM_PER_THREAD = 8;
 
 __global__ void reduce_kernel_1(float* input, float* output, const int N) {
   __shared__ float smem[THREAD_NUM_PER_BLOCK];
-  const int global_idx = blockDim.x * blockIdx.x  + tid;
-
+  const int tid = threadIdx.x;
+  int global_idx = blockDim.x * blockIdx.x  + tid;
+  const int bid = blockIdx.x;
   const int bd = blockDim.x;
   // method1: manual unroll
   // smem[tid] = input[global_idx] + input[global_idx + bd] + input[global_idx + 2 * bd] + input[global_idx + 3 * bd];
