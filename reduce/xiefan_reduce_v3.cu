@@ -26,7 +26,7 @@ __global__ void reduce_kernel_1(float* input, float* output, const int N) {
 
   __syncthreads();
   #pragma unroll
-  for (int i = THREAD_NUM_PER_BLOCK / (2 * NUM_PER_THREAD); i > 0; i /= 2) {
+  for (int i = THREAD_NUM_PER_BLOCK / 2; i > 0; i /= 2) {
     if (tid < i) {
       smem[tid] += smem[tid + i];
     }
