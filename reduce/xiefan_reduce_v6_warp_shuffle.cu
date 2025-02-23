@@ -30,7 +30,7 @@ __global__ void reduce_kernel_1(float* input, float* output, const int N) {
   unsigned mask = 0xffffffff;
   #pragma unroll
   for (int i = WARP_SIZE / 2; i > 0; i >>= 1) {
-    val += __shuffle_down_sync(mask, val, i);
+    val += __shfl_down_sync(mask, val, i);
   }
   const int warp_id = tid / WARP_SIZE;
   const int lane_id = tid % WARP_SIZE;
@@ -42,7 +42,7 @@ __global__ void reduce_kernel_1(float* input, float* output, const int N) {
     val = smem[lane_id];
     #pragma unroll
     for (int i = WARP_SIZE / 2; i > 0; i >>= 1) {
-      val += __shuffle_down_sync(mask, val, i);
+      val += __shfl_down_sync(mask, val, i);
     }
     if (lane_id == 0) {
       output[bid] = val;
